@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
+
+/*
+License
+These fonts are licensed under the Open Font License.
+You can use them freely in your products & projects - print or digital, commercial or otherwise.
+This isn't legal advice, please consider consulting a lawyer and see the full license for all details.
+
+url : https://fonts.google.com/specimen/Quicksand#standard-styles
+*/
+
+*{
+    font-family: 'Quicksand', sans-serif;
+    font-size: 100%;
+}
+body{
+    font-size: 1rem;
+    background-color: black;
+    color: white;
+    width: 80%;
+    margin: auto;
+    margin-top: 1rem;
+}

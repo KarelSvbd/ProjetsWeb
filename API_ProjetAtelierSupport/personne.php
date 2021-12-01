@@ -30,4 +30,32 @@
         $sql->execute();
         return $sql->fetchAll();
     }
+
+    function TestConnect($email, $password){
+        $sql = MonPdo::getInstance()->prepare("SELECT idPersonne, nomPersonne, prenomPersonne, dateNaissance, idGrade, email, password FROM stock.personne WHERE email = '" . $email ."' AND password = '" . sha1($password)."'");
+        $sql->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'personne');
+        $sql->execute();
+        $response = $sql->fetchAll();
+        if(is_array($response))
+        {
+            $str=rand();
+            $key = sha1($str);
+
+
+            http_response_code(200);
+                $response = array(
+                "200" => "l'utilisateur est connecté",
+                "email" => $email,
+                "password" => sha1($password),
+                "sessionKey" => $key
+            );
+        }
+        else{
+            http_response_code(401);
+                $response = array(
+                "200" => "Mauvaises données de connexion",
+            );
+        }
+        return $response;
+    }
 ?>

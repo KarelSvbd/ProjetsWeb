@@ -21,16 +21,19 @@ function returnResponse() {
     require("typeObjet.php");
     require("emprunt.php");
     require("modele.php");
+    require("connect.php");
 
 
 
     //Si l'utlisateur demande un GET
     if($_SERVER['REQUEST_METHOD'] == 'GET'){
         //réponse par défault
-        http_response_code(500);
+        /*http_response_code(400);
         $response = array(
-            "500" => "Erreur lors de l'execution du code",
-        );
+            "400" => "Veuillez saisir une donnée à envoyer",
+        );*/
+
+        
 
         //Intération avec la table personne
         if(isset($_GET["personnes"])){
@@ -109,6 +112,22 @@ function returnResponse() {
                     $response = GetAllModele();
                 break;
             }
+        }
+        else if($_GET["connect"]){
+            //Si on veut se connecter en utilisant email password
+            if($_GET["connect"] == "ep"){
+                if(isset($_GET["email"]) && isset($_GET["password"])){
+                
+                    $response = TestConnect($_GET["email"], $_GET["password"]);
+                }
+                else{
+                    http_response_code(400);
+                        $response = array(
+                        "400" => "Mauvaise saisie des données de connection",
+                    );
+                }
+            }
+            
         }
         echo json_encode($response);
     }
