@@ -36,16 +36,21 @@
         $sql->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'personne');
         $sql->execute();
         $response = $sql->fetchAll();
-        if(is_array($response))
+        if(isset($response[0][0]))
         {
             $str=rand();
             $key = sha1($str);
-
+            $donnees = GetPersonneByAttribute("email", $email);
 
             http_response_code(200);
                 $response = array(
                 "200" => "l'utilisateur est connecté",
-                "email" => $email,
+                "idPersonne" => $donnees[0]["idPersonne"],
+                "nomPersonne" => $donnees[0]["nomPersonne"],
+                "prenomPersonne" => $donnees[0]["prenomPersonne"],
+                "dateNaissance" => $donnees[0]["dateNaissance"],
+                "email" => $donnees[0]["email"],
+                "idGrade" => $donnees[0]["idGrade"],
                 "password" => sha1($password),
                 "sessionKey" => $key
             );
@@ -53,9 +58,11 @@
         else{
             http_response_code(401);
                 $response = array(
-                "200" => "Mauvaises données de connexion",
+                "401" => "Mauvaises données de connexion",
             );
         }
         return $response;
     }
+
+    
 ?>

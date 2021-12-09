@@ -10,4 +10,12 @@
 */
 
 
+    function connectWithKey($idUser, $sessionKey){
+        $sql = MonPdo::getInstance()->prepare("INSERT INTO stock.connexion(idPersonne, CleDeConnexion) VALUES('" . $idUser . "', '" .$sessionKey . "')");
+        $sql->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'connexion');
+        $sql->execute();
+    }
+
+    //TO DO : function disconnectWithKey
+    
 ?>

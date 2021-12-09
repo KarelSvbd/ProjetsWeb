@@ -87,6 +87,18 @@ function returnResponse() {
                     http_response_code(200);
                     $response = GetAllGrade();
                 break;
+                case "nom":
+                    if(isset($_GET["idGrade"])){
+                        http_response_code(200);
+                        $response = GetNomGradeByIdGrade($_GET["idGrade"]);
+                    }
+                    else{
+                        http_response_code(401);
+                        $response = array(
+                            "400" => "Veuillez indiquer un idGrade",
+                        );
+                    }
+                break;
             }
         }
         else if($_GET["typeObjet"]){
@@ -117,13 +129,25 @@ function returnResponse() {
             //Si on veut se connecter en utilisant email password
             if($_GET["connect"] == "ep"){
                 if(isset($_GET["email"]) && isset($_GET["password"])){
-                
-                    $response = TestConnect($_GET["email"], $_GET["password"]);
+                    
+                    $essaiConnexion = TestConnect($_GET["email"], $_GET["password"]);
+                    if(isset($essaiConnexion["200"])){
+                        
+                        //connectWithKey(GetPersonneByAttribute("email", $_GET["email"])[0][0], $essaiConnexion);
+                        connectWithKey(GetPersonneByAttribute("email", $_GET["email"])[0][0], $essaiConnexion["sessionKey"]);
+                        $response = $essaiConnexion;
+                    }
+                    else{
+                        http_response_code(401);
+                        $response = array(
+                            "401" => "Mauvais email / mot de passe",
+                        );
+                    }
                 }
                 else{
-                    http_response_code(400);
+                    http_response_code(401);
                         $response = array(
-                        "400" => "Mauvaise saisie des données de connection",
+                        "401" => "Mauvaise saisie des données de connection",
                     );
                 }
             }

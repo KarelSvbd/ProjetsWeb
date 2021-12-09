@@ -15,4 +15,12 @@ function GetAllGrade(){
     $sql->execute();
     return $sql->fetchAll();
 }
+
+function GetNomGradeByIdGrade($idGrade){
+    $sql = MonPdo::getInstance()->prepare('SELECT nomGrade FROM grade WHERE idGrade = :idGrade');
+    $sql->bindParam(':idGrade', $idGrade);
+    $sql->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'grade');
+    $sql->execute();
+    return $sql->fetchAll()[0]["nomGrade"];
+}
 ?>
