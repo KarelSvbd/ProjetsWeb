@@ -16,4 +16,11 @@ function GetAllModele(){
     $sql->execute();
     return $sql->fetchAll();
 }
+
+function GetNomsModele(){
+    $sql = MonPdo::getInstance()->prepare('SELECT nomModele FROM modele');
+    $sql->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'modele');
+    $sql->execute();
+    return $sql->fetchAll();
+}
 ?>

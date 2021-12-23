@@ -16,6 +16,28 @@
         $sql->execute();
     }
 
-    //TO DO : function disconnectWithKey
+    
+    function disconnectWithKey($idUser){
+        $sql = MonPdo::getInstance()->prepare("DELETE FROM stock.connexion WHERE idPersonne=" . $idUser ."");
+        $sql->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'connexion');
+        $sql->execute();
+    }
+
+    //Return bool
+    function verifyIfKeyExistWithTheRightUser($key, $idUser){
+        $sql = MonPdo::getInstance()->prepare('SELECT idConnexion, idPersonne, CleDeConnexion FROM stock.connexion WHERE CleDeConnexion="' . $key . '" AND idPersonne="' . $idUser .'"');
+        $sql->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'emprunt');
+        $sql->execute();
+
+        $reponse = $sql->fetchAll();
+        $reponse["idConnexion"];
+        //Si l'id de connexion existe
+        if(isset($reponse[0]["idConnexion"])){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
     
 ?>

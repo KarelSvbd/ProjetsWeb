@@ -24,17 +24,55 @@ function returnResponse() {
     require("connect.php");
 
 
+    if($_GET["connect"]){
+        //Si on veut se connecter en utilisant email password
+        if($_GET["connect"] == "ep"){
+            if(isset($_GET["email"]) && isset($_GET["password"])){
+                
+                $essaiConnexion = TestConnect($_GET["email"], $_GET["password"]);
+                if(isset($essaiConnexion["200"])){
+                    
+                    connectWithKey(GetPersonneByAttribute("email", $_GET["email"])[0][0], $essaiConnexion["sessionKey"]);
+                    $response = $essaiConnexion;
+                }
+                else{
+                    http_response_code(401);
+                    $response = array(
+                        "401" => "Mauvais email / mot de passe",
+                    );
+                }
+            }
+            else{
+                http_response_code(401);
+                    $response = array(
+                    "401" => "Mauvaise saisie des données de connection",
+                );
+            }
+        }
+        if($_GET["connect"] == "disconnect"){
+            if(isset($_GET["idUser"])){
+                http_response_code(200);
+                $response = disconnectWithKey($_GET["idUser"]);
+            }
+        }
+        
+    }
 
-    //Si l'utlisateur demande un GET
-    if($_SERVER['REQUEST_METHOD'] == 'GET'){
-        //réponse par défault
-        /*http_response_code(400);
-        $response = array(
-            "400" => "Veuillez saisir une donnée à envoyer",
-        );*/
+    if(isset($_GET["key"]) && isset($_GET["idUser"]))
+    {
+        if(verifyIfKeyExistWithTheRightUser($_GET["key"], $_GET["idUser"]))
+        {
+            //Si l'utlisateur demande un GET
+            if($_SERVER['REQUEST_METHOD'] == 'GET'){
+                
+        if(isset($_GET["test"])){
+            http_response_code(200);
+            $response = verifyIfKeyExistWithTheRightUser($_GET["key"], $_GET["idUser"]);
+        }
 
         
 
+        
         //Intération avec la table personne
         if(isset($_GET["personnes"])){
             http_response_code(200);
@@ -123,38 +161,31 @@ function returnResponse() {
                     http_response_code(200);
                     $response = GetAllModele();
                 break;
+                case "noms":
+                    http_response_code(200);
+                    $response = GetNomsModele();
+                break;
             }
         }
-        else if($_GET["connect"]){
-            //Si on veut se connecter en utilisant email password
-            if($_GET["connect"] == "ep"){
-                if(isset($_GET["email"]) && isset($_GET["password"])){
-                    
-                    $essaiConnexion = TestConnect($_GET["email"], $_GET["password"]);
-                    if(isset($essaiConnexion["200"])){
-                        
-                        //connectWithKey(GetPersonneByAttribute("email", $_GET["email"])[0][0], $essaiConnexion);
-                        connectWithKey(GetPersonneByAttribute("email", $_GET["email"])[0][0], $essaiConnexion["sessionKey"]);
-                        $response = $essaiConnexion;
-                    }
-                    else{
-                        http_response_code(401);
-                        $response = array(
-                            "401" => "Mauvais email / mot de passe",
-                        );
-                    }
-                }
-                else{
-                    http_response_code(401);
-                        $response = array(
-                        "401" => "Mauvaise saisie des données de connection",
-                    );
-                }
-            }
-            
-        }
-        echo json_encode($response);
+        
     }
+    else if($_SERVER['REQUEST_METHOD'] == 'PUT'){
+        if($_GET["emprunt"]){
+            if(isset($_GET["indexAncienModele"]) && isset($_GET["indexAncienPersonne"]) && isset($_GET["indexNouveauModele"]) && isset($_GET["indexNouveauPersonne"])){
+                ModifEmprunt($_GET["indexAncienModele"], $_GET["indexAncienPersonne"], $_GET["indexNouveauModele"], $_GET["indexNouveauPersonne"]);
+                http_response_code(201);
+                $response = array(
+                    "201" => "La donnée à été modifiée",
+                );
+            }
+        }
+    }
+}
+}
+
+    
+    //Envoie le réponse en JSON
+    echo json_encode($response);
 }
 
 ?>

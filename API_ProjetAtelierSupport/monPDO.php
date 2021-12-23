@@ -13,8 +13,8 @@ class MonPdo
 
 private static $serveur = 'mysql:host=localhost';
 private static $bdd = 'dbname=stock';
-private static $user = 'root';
-private static $mdp = '0aui-cigk';
+private static $user = 'adminStock';
+private static $mdp = 'Super1234';
 
 private static $monPdo;
 private static $unPdo = null;
