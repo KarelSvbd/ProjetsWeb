@@ -34,4 +34,6 @@
         $sql->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Type');
         $sql->execute();
     }
+
+    
 ?>
